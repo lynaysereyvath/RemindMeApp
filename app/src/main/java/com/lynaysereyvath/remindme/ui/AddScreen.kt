@@ -11,6 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,46 +20,72 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.lynaysereyvath.remindme.domain.QuoteEntity
 import com.lynaysereyvath.remindme.ui.theme.RemindMeTheme
 
-data class Quote(
-    val author: String,
-    val quote: String
-)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddLayout(onSubmit: (Quote) -> Unit)
-{
-    var author: String by rememberSaveable {
-        mutableStateOf("")
+fun AddLayout(onFinished: () -> Unit, onBack: () -> Unit) {
+
+    val viewModel = hiltViewModel<AddViewModel>()
+    val name by viewModel.name.collectAsStateWithLifecycle()
+    val message by viewModel.message.collectAsStateWithLifecycle()
+    val onNameEntered: (value: String) -> Unit = remember {
+        return@remember viewModel::setName
     }
-    var quote: String by rememberSaveable {
-        mutableStateOf("")
+    val onMessageEntered: (value: String) -> Unit = remember {
+        return@remember viewModel::setMessage
     }
+    val onSubmit: (value: QuoteEntity) -> Unit = remember {
+        return@remember viewModel::insertQuoteEntity
+    }
+
     Column {
-        Spacer(modifier = Modifier.height(20.dp))
         TextField(
-            value = author,
-            onValueChange = { author = it},
+            value = name,
+            onValueChange = { onNameEntered(it) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp),
-            label = { Text(text = "Author")}
+                .padding(horizontal = 10.dp),
+            placeholder = { Text(text = "Author") },
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            ),
+            textStyle = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)
         )
-        Spacer(modifier = Modifier.height(20.dp))
         TextField(
-            value = quote,
-            onValueChange = { quote = it},
+            value = message,
+            onValueChange = { onMessageEntered(it) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 10.dp)
                 .weight(1f),
-            label = { Text("Quote")},
+            placeholder = { Text("Quote") },
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            ),
+            textStyle = TextStyle(fontSize = 14.sp)
         )
         Spacer(modifier = Modifier.height(20.dp))
-        Button(onClick = { /*TODO*/ }, modifier = Modifier.align(Alignment.End).padding(end = 20.dp)) {
+        Button(
+            onClick = { onSubmit(QuoteEntity(author = name, message = message)) },
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(end = 20.dp)
+        ) {
             Text(text = "Save")
         }
     }
@@ -66,11 +93,10 @@ fun AddLayout(onSubmit: (Quote) -> Unit)
 
 @Composable
 @Preview
-fun AddLayoutPreview()
-{
+fun AddLayoutPreview() {
     RemindMeTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
-            AddLayout {}
+            AddLayout(onFinished = {}, onBack = {})
         }
     }
 }
