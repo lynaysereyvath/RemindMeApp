@@ -37,65 +37,35 @@ import com.lynaysereyvath.remindme.ui.theme.RemindMeTheme
 fun RemindMeScreen(
     navController: NavHostController
 ) {
-    var canSearch: Boolean by rememberSaveable {
-        mutableStateOf(false)
-    }
 
     val backEntry by navController.currentBackStackEntryAsState()
     val currentScreen = RemindMeAppScreen.valueOf(
         backEntry?.destination?.route ?: RemindMeAppScreen.Home.name
     )
 
-    Scaffold(
-        topBar = {
-            RemindMeAppBar(
-                canNavigateUp = navController.previousBackStackEntry != null,
-                canSearch = canSearch,
-                searchClicked = {
-                    canSearch = true
-                },
-            ) {
-                navController.popBackStack(RemindMeAppScreen.Home.name, inclusive = false)
-            }
-        },
-        bottomBar = {
-            if (navController.previousBackStackEntry == null)
-            {
-                RemindMeBottomAppBar(){
-                    navController.navigate(RemindMeAppScreen.Add.name)
-                }
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
 
-        ) {
-
-        NavHost(navController = navController, startDestination = RemindMeAppScreen.Home.name, modifier = Modifier.padding(it))
+    NavHost(
+        navController = navController,
+        startDestination = RemindMeAppScreen.Home.name,
+        modifier = Modifier
+    )
+    {
+        composable(route = RemindMeAppScreen.Home.name)
         {
-            composable(route = RemindMeAppScreen.Home.name)
-            {
-                HomeScreenLayout(onItemClicked = { /*TODO*/ })
-            }
-            composable(route = RemindMeAppScreen.Add.name)
-            {
-                AddLayout(
-                    onFinished = {
-                        navController.popBackStack(RemindMeAppScreen.Home.name, inclusive = false)
-                    },
-                    onBack = {
-                        navController.popBackStack(RemindMeAppScreen.Home.name, inclusive = false)
-                    })
-            }
+            HomeScreenLayout(onItemClicked = { /*TODO*/ }, navController = navController)
         }
-
+        composable(route = RemindMeAppScreen.Add.name)
+        {
+            AddLayout( navController = navController)
+        }
     }
+
 }
 
 
 @Preview
 @Composable
-fun RemindMeScreenPreview()
-{
+fun RemindMeScreenPreview() {
     RemindMeTheme {
         Surface {
             RemindMeScreen(navController = rememberNavController())

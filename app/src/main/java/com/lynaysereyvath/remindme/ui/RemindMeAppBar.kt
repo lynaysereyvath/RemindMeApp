@@ -85,31 +85,3 @@ fun RemindMeAppBar(
         }
     )
 }
-
-
-@Composable
-fun RemindMeBottomAppBar(onAddClick: () -> Unit) {
-    BottomAppBar() {
-        Column(modifier = Modifier.weight(1f)) {
-            Row {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Filled.DateRange, "Schedule")
-                }
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Filled.Settings, "Setting")
-                }
-            }
-        }
-        Column(modifier = Modifier.padding(horizontal = 5.dp)) {
-            Row {
-                FloatingActionButton(
-                    onClick = { onAddClick() },
-                    elevation = FloatingActionButtonDefaults.elevation(0.dp)
-                ) {
-                    Icon(Icons.Filled.Edit, "Add")
-                }
-            }
-        }
-
-    }
-}
