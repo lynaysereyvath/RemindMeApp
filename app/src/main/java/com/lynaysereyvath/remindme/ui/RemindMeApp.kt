@@ -10,7 +10,8 @@ import androidx.navigation.compose.rememberNavController
 enum class RemindMeAppScreen(val title: String)
 {
     Home("home"),
-    Add("add")
+    Add("add"),
+    Schedule("schedule")
 }
 
 @Composable

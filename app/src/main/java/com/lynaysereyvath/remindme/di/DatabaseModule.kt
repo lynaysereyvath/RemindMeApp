@@ -3,6 +3,7 @@ package com.lynaysereyvath.remindme.di
 import android.content.Context
 import androidx.room.Room
 import com.lynaysereyvath.remindme.data.local.AppDatabase
+import com.lynaysereyvath.remindme.domain.repository.AlarmDao
 import com.lynaysereyvath.remindme.domain.repository.QuoteDao
 import dagger.Module
 import dagger.Provides
@@ -25,5 +26,10 @@ class DatabaseModule {
     {
         return Room.databaseBuilder(applicationContext, AppDatabase::class.java, "remindme_database")
             .build()
+    }
+
+    @Provides
+    fun provideAlarmDao(database: AppDatabase): AlarmDao {
+        return database.alarmDao()
     }
 }

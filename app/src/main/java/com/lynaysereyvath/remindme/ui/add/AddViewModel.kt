@@ -1,4 +1,4 @@
-package com.lynaysereyvath.remindme.ui
+package com.lynaysereyvath.remindme.ui.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
