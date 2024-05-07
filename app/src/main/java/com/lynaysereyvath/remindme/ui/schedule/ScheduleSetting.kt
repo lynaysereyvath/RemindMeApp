@@ -1,5 +1,11 @@
 package com.lynaysereyvath.remindme.ui.schedule
 
+import android.Manifest
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -47,12 +53,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.lynaysereyvath.remindme.R
 import com.lynaysereyvath.remindme.domain.AlarmEntity
+import com.lynaysereyvath.remindme.domain.isEnable
 import com.lynaysereyvath.remindme.ui.theme.RemindMeTheme
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,6 +100,7 @@ fun SetScheduleScreen(modifier: Modifier = Modifier, navController: NavControlle
         },
         floatingActionButtonPosition = FabPosition.Center,
     ) {
+        val context = LocalContext.current
         Box(
             modifier = Modifier
                 .padding(it)
@@ -106,8 +119,30 @@ fun SetScheduleScreen(modifier: Modifier = Modifier, navController: NavControlle
                             )
                         )
                     ) { alarmEntity ->
-                        AlarmCard(modifier = Modifier.padding(10.dp), alarmEntity = alarmEntity) { item ->
+                        AlarmCard(
+                            modifier = Modifier.padding(10.dp),
+                            alarmEntity = alarmEntity
+                        ) { item ->
                             mViewModel.updateAlarmEntity(item)
+                            val alarmManager =
+                                context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                            val intent = Intent(context, AlarmReceiver::class.java)
+                            val pendingIntent = PendingIntent.getBroadcast(
+                                context.applicationContext,
+                                item.id,
+                                intent,
+                                PendingIntent.FLAG_IMMUTABLE
+                            )
+                            if (item.isEnable()) {
+                                val cal  = Calendar.getInstance()
+                                cal.set(Calendar.HOUR_OF_DAY, item.hour)
+                                cal.set(Calendar.MINUTE, item.minute)
+                                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
+//                                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.timeInMillis, 120000, pendingIntent)
+//                                alarmManager.set(AlarmManager.RTC_WAKEUP, cal.timeInMillis, pendingIntent)
+                            } else {
+                                alarmManager.cancel(pendingIntent)
+                            }
                         }
                     }
                 }

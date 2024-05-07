@@ -14,4 +14,8 @@ interface QuoteRepository {
     suspend fun update(quoteEntity: QuoteEntity)
 
     suspend fun deleteAll()
+
+    suspend fun getOne(): QuoteEntity
+    suspend fun getCount(): Int
+    suspend fun selectById(id: Int): QuoteEntity
 }

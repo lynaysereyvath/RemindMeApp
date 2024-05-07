@@ -25,4 +25,14 @@ interface QuoteDao {
 
     @Query("delete from tblQuote")
     suspend fun deleteAll()
+
+    @Query("select * from tblQuote where id = 1")
+    suspend fun getOne(): QuoteEntity
+
+    @Query("select count(*) from tblQuote")
+    suspend fun getCount(): Int
+
+    @Query("select * from tblQuote where id = :id")
+    suspend fun selectById(id: Int): QuoteEntity
+
 }

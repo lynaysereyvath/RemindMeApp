@@ -33,4 +33,16 @@ class QuoteRepositoryImpl @Inject constructor(private val quoteDao: QuoteDao): Q
     override suspend fun deleteAll() {
         quoteDao.deleteAll()
     }
+
+    override suspend fun getOne(): QuoteEntity {
+        return quoteDao.getOne()
+    }
+
+    override suspend fun getCount(): Int {
+        return quoteDao.getCount()
+    }
+
+    override suspend fun selectById(id: Int): QuoteEntity {
+        return quoteDao.selectById(id)
+    }
 }
