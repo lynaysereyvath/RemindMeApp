@@ -24,15 +24,19 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.lynaysereyvath.remindme.domain.QuoteEntity
 
 @Composable
-fun QuoteItemUI(name: String, message: String) {
+fun QuoteItemUI(quote: QuoteEntity, onClicked: (id: Int) -> Unit) {
     Box(modifier = Modifier.padding(horizontal = 5.dp, vertical = 3.dp)) {
 
         Card(
             modifier = Modifier,
             shape = RectangleShape, elevation = CardDefaults.cardElevation(3.dp),
-            colors = CardDefaults.cardColors(Color.Yellow)
+            colors = CardDefaults.cardColors(Color.Yellow),
+            onClick = {
+                onClicked(quote.id)
+            }
         ) {
 
             Row(
@@ -51,12 +55,12 @@ fun QuoteItemUI(name: String, message: String) {
                         .padding(horizontal = 5.dp, vertical = 10.dp)
                 ) {
                     Text(
-                        text = message, modifier = Modifier.padding(), style = TextStyle(
+                        text = quote.message, modifier = Modifier.padding(), style = TextStyle(
                             fontWeight = FontWeight.Bold
                         )
                     )
                     Spacer(modifier = Modifier.height(3.dp))
-                    Text(text = "- $name", modifier = Modifier.padding(start = 10.dp))
+                    Text(text = "- ${quote.author}", modifier = Modifier.padding(start = 10.dp))
                 }
             }
         }
@@ -66,5 +70,10 @@ fun QuoteItemUI(name: String, message: String) {
 @Composable
 @Preview
 fun QuoteItemUIPreview() {
-    QuoteItemUI(name = "ABC DEF", message = "Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message ")
+    QuoteItemUI(
+        QuoteEntity(
+            author = "ABC DEF",
+            message = "Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message "
+        )
+    ) {}
 }

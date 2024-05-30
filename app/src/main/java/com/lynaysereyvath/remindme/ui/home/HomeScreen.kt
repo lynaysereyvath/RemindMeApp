@@ -1,5 +1,6 @@
 package com.lynaysereyvath.remindme.ui.home
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.navArgument
 import com.lynaysereyvath.remindme.ui.RemindMeAppScreen
 
 
@@ -40,8 +42,7 @@ import com.lynaysereyvath.remindme.ui.RemindMeAppScreen
 @Composable
 fun HomeScreenLayout(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
-    onItemClicked: () -> Unit
+    navController: NavHostController
 ) {
 
     val viewModel = hiltViewModel<HomeScreenViewModel>()
@@ -53,7 +54,7 @@ fun HomeScreenLayout(
     val quoteList by viewModel.quoteList.collectAsStateWithLifecycle()
 
     val keyWord by viewModel.searchKeyword.collectAsStateWithLifecycle()
-    val onKeyWordEntered : (value: String) -> Unit = remember {
+    val onKeyWordEntered: (value: String) -> Unit = remember {
         return@remember viewModel::setSearchKeyWord
     }
 
@@ -120,13 +121,15 @@ fun HomeScreenLayout(
         },
         floatingActionButtonPosition = FabPosition.End,
 
-        ) {
+        ) { padding ->
 
-        LazyColumn(modifier = modifier.padding(it))
+        LazyColumn(modifier = modifier.padding(padding))
         {
             items(quoteList)
-            {
-                QuoteItemUI(name = it.author, message = it.message)
+            { quote ->
+                QuoteItemUI(quote) {
+                    navController.navigate("${RemindMeAppScreen.Add.name}?id=${quote.id}")
+                }
             }
         }
     }
