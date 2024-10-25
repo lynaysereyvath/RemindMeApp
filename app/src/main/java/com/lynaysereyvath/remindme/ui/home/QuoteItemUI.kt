@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,47 +24,34 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.lynaysereyvath.remindme.domain.QuoteEntity
 
 @Composable
 fun QuoteItemUI(quote: QuoteEntity, onClicked: (id: Int) -> Unit) {
-    Box(modifier = Modifier.padding(horizontal = 5.dp, vertical = 3.dp)) {
 
-        Card(
-            modifier = Modifier,
-            shape = RectangleShape, elevation = CardDefaults.cardElevation(3.dp),
-            colors = CardDefaults.cardColors(Color.Yellow),
-            onClick = {
-                onClicked(quote.id)
-            }
+    OutlinedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp),
+        onClick = {
+            onClicked(quote.id)
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
         ) {
+            Text(
+                text = "\"${quote.message}\"",
+                lineHeight = 20.sp,
+            )
+            Text(text = quote.author, modifier = Modifier.padding(top = 20.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 3.dp)
-                    .background(Color.White)
-            ) {
-                Spacer(
-                    modifier = Modifier
-                        .width(2.dp)
-                        .background(Color.Yellow)
-                )
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 5.dp, vertical = 10.dp)
-                ) {
-                    Text(
-                        text = quote.message, modifier = Modifier.padding(), style = TextStyle(
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(3.dp))
-                    Text(text = "- ${quote.author}", modifier = Modifier.padding(start = 10.dp))
-                }
-            }
         }
     }
 }
@@ -70,10 +59,17 @@ fun QuoteItemUI(quote: QuoteEntity, onClicked: (id: Int) -> Unit) {
 @Composable
 @Preview
 fun QuoteItemUIPreview() {
-    QuoteItemUI(
-        QuoteEntity(
-            author = "ABC DEF",
-            message = "Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message "
-        )
-    ) {}
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        QuoteItemUI(
+            QuoteEntity(
+                author = "ABC DEF",
+                message = "Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message "
+            )
+        ) {}
+
+    }
 }

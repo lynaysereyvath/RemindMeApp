@@ -9,28 +9,41 @@ import androidx.compose.ui.unit.sp
 import com.lynaysereyvath.remindme.R
 
 // Set of Material typography styles to start with
+
+val poppinsFamily = FontFamily(
+    Font(R.font.poppins_light, FontWeight.Light),
+    Font(R.font.poppins, FontWeight.Normal),
+    Font(R.font.poppins_medium, FontWeight.Medium),
+    Font(R.font.poppins_semibold, FontWeight.SemiBold),
+    Font(R.font.poppins_bold, FontWeight.Bold),
+)
+
+val robotoFamily = FontFamily(
+    Font(R.font.roboto_light, FontWeight.Light),
+    Font(R.font.roboto, FontWeight.Normal),
+    Font(R.font.roboto_medium, FontWeight.Medium),
+    Font(R.font.roboto_bold, FontWeight.Bold),
+)
+
 val Typography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = robotoFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
         letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
+    ),
+    //Other default text styles to override
     titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = robotoFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 22.sp,
-        lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
     labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = robotoFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,
-        lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     )
-    */
+
 )

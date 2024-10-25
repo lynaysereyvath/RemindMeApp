@@ -38,7 +38,7 @@ import com.lynaysereyvath.remindme.ui.RemindMeAppScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddLayout(navController: NavController, id: Int) {
+fun AddLayout(navController: NavController, id: Int? = null) {
 
     val viewModel = hiltViewModel<AddViewModel>()
     val name by viewModel.name.collectAsStateWithLifecycle()
@@ -55,15 +55,12 @@ fun AddLayout(navController: NavController, id: Int) {
 
     val titleTextStyle = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)
     val paragraphTextStyle = TextStyle(fontSize = 14.sp)
-    val transparentContainerColor = TextFieldDefaults.textFieldColors(
-        containerColor = Color.Transparent,
-        focusedIndicatorColor = Color.Transparent,
-        unfocusedIndicatorColor = Color.Transparent
+    val transparentContainerColor = TextFieldDefaults.colors(
     )
-    
+
     LaunchedEffect(key1 = true, block = {
         if (id != -1) {
-            viewModel.getQuote(id)
+//            viewModel.getQuote(id)
         }
     })
 

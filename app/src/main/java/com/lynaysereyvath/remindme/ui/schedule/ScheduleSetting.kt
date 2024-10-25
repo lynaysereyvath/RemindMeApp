@@ -8,11 +8,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,6 +27,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Menu
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -37,6 +42,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -49,6 +55,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -68,7 +75,11 @@ import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SetScheduleScreen(modifier: Modifier = Modifier, navController: NavController) {
+fun SetScheduleScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    openDrawer: () -> Unit
+) {
     val mViewModel = hiltViewModel<ScheduleViewModel>()
 
     LaunchedEffect(key1 = true, block = {
@@ -78,15 +89,25 @@ fun SetScheduleScreen(modifier: Modifier = Modifier, navController: NavControlle
 
     var showTimePicker by remember { mutableStateOf(false) }
     Scaffold(
+        modifier = modifier,
         topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(text = "Alarm Setting") },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(Color.White),
+            TopAppBar(
+                title = { Text(text = "Reminders") },
                 navigationIcon = {
+                    IconButton(onClick = openDrawer) {
+                        Icon(Icons.Outlined.Menu, "")
+                    }
+                },
+                actions = {
                     IconButton(onClick = {
                         navController.navigateUp()
                     }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "")
+                        Icon(Icons.Outlined.Search, "")
+                    }
+                    IconButton(onClick = {
+                        navController.navigateUp()
+                    }) {
+                        Icon(painterResource(R.drawable.outline_view_agenda_24), "")
                     }
                 }
             )
@@ -94,58 +115,76 @@ fun SetScheduleScreen(modifier: Modifier = Modifier, navController: NavControlle
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 showTimePicker = true
-            }, shape = CircleShape) {
-                Icon(Icons.Filled.Add, "Large floating action button")
+            }) {
+                Icon(painterResource(R.drawable.outline_alarm_add_24), "add alarm")
             }
         },
         floatingActionButtonPosition = FabPosition.Center,
     ) {
         val context = LocalContext.current
-        Box(
-            modifier = Modifier
-                .padding(it)
-                .background(Color(0xFFF6F6F6))
-        ) {
+
+        if (alarmEntities.isEmpty()) {
             Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    Icons.Outlined.Notifications,
+                    "notification icon",
+                    modifier = Modifier
+                        .width(80.dp)
+                        .aspectRatio(1f),
+                    tint = Color.Yellow
+                )
+                Text("No reminder is set")
+            }
+        } else {
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(it)
             ) {
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(
-                        alarmEntities.sortedWith(
-                            compareBy(
-                                AlarmEntity::hour,
-                                AlarmEntity::minute
-                            )
+                items(
+                    alarmEntities.sortedWith(
+                        compareBy(
+                            AlarmEntity::hour,
+                            AlarmEntity::minute
                         )
-                    ) { alarmEntity ->
-                        AlarmCard(
-                            modifier = Modifier.padding(10.dp),
-                            alarmEntity = alarmEntity
-                        ) { item ->
-                            mViewModel.updateAlarmEntity(item)
-                            val alarmManager =
-                                context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                            val intent = Intent(context, AlarmReceiver::class.java)
-                            val pendingIntent = PendingIntent.getBroadcast(
-                                context.applicationContext,
-                                item.id,
-                                intent,
-                                PendingIntent.FLAG_IMMUTABLE
+                    )
+                ) { alarmEntity ->
+                    AlarmCard(
+                        modifier = Modifier.padding(10.dp),
+                        alarmEntity = alarmEntity
+                    ) { item ->
+                        mViewModel.updateAlarmEntity(item)
+                        val alarmManager =
+                            context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                        val intent = Intent(context, AlarmReceiver::class.java)
+                        val pendingIntent = PendingIntent.getBroadcast(
+                            context.applicationContext,
+                            item.id,
+                            intent,
+                            PendingIntent.FLAG_IMMUTABLE
+                        )
+                        if (item.isEnable()) {
+                            val cal = Calendar.getInstance()
+                            cal.set(Calendar.HOUR_OF_DAY, item.hour)
+                            cal.set(Calendar.MINUTE, item.minute)
+                            alarmManager.setRepeating(
+                                AlarmManager.RTC_WAKEUP,
+                                cal.timeInMillis,
+                                AlarmManager.INTERVAL_DAY,
+                                pendingIntent
                             )
-                            if (item.isEnable()) {
-                                val cal  = Calendar.getInstance()
-                                cal.set(Calendar.HOUR_OF_DAY, item.hour)
-                                cal.set(Calendar.MINUTE, item.minute)
-                                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
 //                                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.timeInMillis, 120000, pendingIntent)
 //                                alarmManager.set(AlarmManager.RTC_WAKEUP, cal.timeInMillis, pendingIntent)
-                            } else {
-                                alarmManager.cancel(pendingIntent)
-                            }
+                        } else {
+                            alarmManager.cancel(pendingIntent)
                         }
                     }
                 }
+
             }
         }
 
@@ -187,6 +226,6 @@ fun SetScheduleScreen(modifier: Modifier = Modifier, navController: NavControlle
 @Composable
 fun SetScheduleScreenPreview() {
     RemindMeTheme {
-        SetScheduleScreen(navController = rememberNavController())
+        SetScheduleScreen(navController = rememberNavController()) {}
     }
 }
