@@ -4,9 +4,11 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.lynaysereyvath.remindme.ui.add.AddLayout
 import com.lynaysereyvath.remindme.ui.home.HomeScreenLayout
 import com.lynaysereyvath.remindme.ui.schedule.SetScheduleScreen
@@ -42,7 +44,10 @@ fun RemindMeNavGraph(
         }
 
         composable(
-            route = RemindMeRoute.AddQuote,
+            route = "${RemindMeRoute.AddQuote}/{id}", arguments = listOf(navArgument("id") {
+                type = NavType.IntType
+                defaultValue = -1
+            }),
             enterTransition = { fadeIn() },
             popExitTransition = { fadeOut() }) {
             AddLayout(

@@ -40,7 +40,7 @@ import com.lynaysereyvath.remindme.ui.theme.Surface
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddLayout(navController: NavController, id: Int? = null) {
+fun AddLayout(navController: NavController) {
 
     val viewModel = hiltViewModel<AddViewModel>()
     val name by viewModel.name.collectAsStateWithLifecycle()
@@ -55,8 +55,8 @@ fun AddLayout(navController: NavController, id: Int? = null) {
         return@remember viewModel::insertQuoteEntity
     }
 
-    val titleTextStyle = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)
-    val paragraphTextStyle = TextStyle(fontSize = 14.sp)
+    val id = navController.currentBackStackEntry?.arguments?.getInt("id")
+
     val transparentContainerColor = TextFieldDefaults.colors(
         focusedContainerColor = Color.Transparent,
         unfocusedContainerColor = Color.Transparent,
@@ -65,8 +65,8 @@ fun AddLayout(navController: NavController, id: Int? = null) {
     )
 
     LaunchedEffect(key1 = true, block = {
-        if (id != -1) {
-//            viewModel.getQuote(id)
+        if (id != null && id != -1) {
+            viewModel.getQuote(id)
         }
     })
 

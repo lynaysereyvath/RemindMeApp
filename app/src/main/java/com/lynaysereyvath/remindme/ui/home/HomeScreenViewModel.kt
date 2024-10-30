@@ -26,6 +26,7 @@ class HomeScreenViewModel @Inject constructor(private val repository: QuoteRepos
     fun getQuoteList() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = repository.getAll().data!!.toQuoteListState()
+            _quoteList.clear()
             _quoteList.addAll(result.quotes)
         }
     }
@@ -51,10 +52,10 @@ class HomeScreenViewModel @Inject constructor(private val repository: QuoteRepos
             isItemsSelected = hasItemSelected
         }
     }
-;
+            ;
     val isSelectableOnClick: () -> Boolean = { isItemsSelected }
 
-    val cancelAllSelections: () -> Unit =  {
+    val cancelAllSelections: () -> Unit = {
         for (i in 0 until _quoteList.size) {
             val item = QuoteState(_quoteList[i].quote, false)
             _quoteList[i] = item
@@ -64,4 +65,14 @@ class HomeScreenViewModel @Inject constructor(private val repository: QuoteRepos
         isItemsSelected = false
     }
 
+    fun delete() {
+        for (i in _quoteList) {
+            if (i.isSelected) {
+                viewModelScope.launch(Dispatchers.IO) {
+                    repository.delete(i.quote)
+                    _quoteList.remove(i)
+                }
+            }
+        }
+    }
 }

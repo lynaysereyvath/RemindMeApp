@@ -5,46 +5,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Menu
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.lynaysereyvath.remindme.R
 import com.lynaysereyvath.remindme.ui.RemindMeAppScreen
 import com.lynaysereyvath.remindme.ui.RemindMeNavigationActions
-import com.lynaysereyvath.remindme.ui.theme.RemindMeTheme
 import com.lynaysereyvath.remindme.ui.theme.Surface
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenLayout(
     modifier: Modifier = Modifier,
@@ -60,104 +43,12 @@ fun HomeScreenLayout(
     })
 
 
-    val keyWord by viewModel.searchKeyword.collectAsStateWithLifecycle()
-    val onKeyWordEntered: (value: String) -> Unit = remember {
-        return@remember viewModel::setSearchKeyWord
-    }
-
-
     Scaffold(
-        modifier = Modifier.safeContentPadding().background(Surface),
+        modifier = Modifier
+            .safeContentPadding()
+            .background(Surface),
         topBar = {
-            TopAppBar(title = {
-                if (!viewModel.isItemsSelected) Text(
-                    "Search your quote",
-                    fontSize = 16.sp
-                )
-            }, navigationIcon = {
-                if (viewModel.isItemsSelected) {
-                    IconButton(
-                        onClick = viewModel.cancelAllSelections
-                    ) {
-                        Icon(Icons.Outlined.Close, "cancel selections")
-                    }
-                } else {
-                    IconButton(
-                        onClick = openDrawer
-                    ) {
-                        Icon(Icons.Outlined.Menu, "menu")
-                    }
-                }
-
-
-            }, actions = {
-
-                if (viewModel.isItemsSelected) {
-                    IconButton(
-                        onClick = {},
-                        modifier = Modifier.padding(horizontal = 10.dp)
-                    ) {
-                        Icon(
-                            painterResource(R.drawable.outline_keep_24), "filter",
-                        )
-                    }
-
-                    IconButton(
-                        onClick = {}
-                    ) {
-                        Icon(
-                            painterResource(R.drawable.outline_add_alert_24),
-                            "profile",
-                        )
-                    }
-                    IconButton(
-                        onClick = {}
-                    ) {
-                        Icon(
-                            painterResource(R.drawable.outline_palette_24),
-                            "profile",
-                        )
-                    }
-                    IconButton(
-                        onClick = {}
-                    ) {
-                        Icon(
-                            painterResource(R.drawable.outline_label_24),
-                            "profile",
-                        )
-                    }
-                    IconButton(
-                        onClick = {}
-                    ) {
-                        Icon(
-                            painterResource(R.drawable.outline_add_alert_24),
-                            "profile",
-                        )
-                    }
-                } else {
-                    IconButton(
-                        onClick = {},
-                        modifier = Modifier.padding(horizontal = 10.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.outline_view_agenda_24), "filter",
-                        )
-                    }
-
-                    IconButton(
-                        onClick = {}
-                    ) {
-                        Icon(
-                            Icons.Outlined.Person,
-                            "profile",
-                            modifier = Modifier
-                                .background(Color.White, CircleShape)
-                                .clip(CircleShape)
-                        )
-                    }
-                }
-            }
-            )
+            HomeTopAppBar(viewModel, openDrawer)
         },
         bottomBar = {
             BottomAppBar(actions = {
@@ -176,7 +67,7 @@ fun HomeScreenLayout(
             }, floatingActionButton = {
                 FloatingActionButton(
                     onClick = {
-                        remindMeNavigationActions.navigateToAddQuote()
+                        remindMeNavigationActions.navigateToAddQuote(null)
                     },
                     elevation = FloatingActionButtonDefaults.elevation(0.dp)
                 ) {
@@ -194,10 +85,11 @@ fun HomeScreenLayout(
                     it,
                     isSelectableOnClick = viewModel.isSelectableOnClick,
                     onSelectedStateChanged = viewModel.toggleSelection,
-                    onClicked = {}
+                    onClicked = { id ->
+                        remindMeNavigationActions.navigateToAddQuote(id)
+                    }
                 )
             }
-
         }
     }
 }
