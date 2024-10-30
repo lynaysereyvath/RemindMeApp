@@ -1,45 +1,74 @@
 package com.lynaysereyvath.remindme.ui.home
 
-import androidx.compose.foundation.Image
+import android.annotation.SuppressLint
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lynaysereyvath.remindme.domain.QuoteEntity
 
+@SuppressLint("UnrememberedMutableState")
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun QuoteItemUI(quote: QuoteEntity, onClicked: (id: Int) -> Unit) {
+fun QuoteItemUI(
+    quote: QuoteState,
+    isSelectableOnClick: () -> Boolean,
+    onClicked: (id: Int) -> Unit,
+    onSelectedStateChanged: (id: Int, isSelected: Boolean) -> Unit
+) {
+
+    val interactionSource = remember { MutableInteractionSource() }
+
+    val isSelected = quote.isSelected
 
     OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp),
-        onClick = {
-            onClicked(quote.id)
-        }
+            .padding(vertical = 5.dp, horizontal = 15.dp)
+            .clip(MaterialTheme.shapes.medium)
+            .combinedClickable(onClick = {
+                if (isSelected)
+                    onSelectedStateChanged(quote.quote.id, false)
+                else {
+                    if (isSelectableOnClick()) {
+                        onSelectedStateChanged(quote.quote.id, true)
+                    } else {
+                        onClicked(quote.quote.id)
+                    }
+                }
+            }, onLongClick = {
+                onSelectedStateChanged(quote.quote.id, !isSelected)
+            }, interactionSource = interactionSource, indication = ripple(bounded = true)),
+        border = BorderStroke(
+            if (isSelected) 3.dp else 1.dp,
+            if (isSelected) Color.DarkGray else MaterialTheme.colorScheme.outlineVariant
+        )
     ) {
         Column(
             modifier = Modifier
@@ -47,10 +76,10 @@ fun QuoteItemUI(quote: QuoteEntity, onClicked: (id: Int) -> Unit) {
                 .padding(20.dp)
         ) {
             Text(
-                text = "\"${quote.message}\"",
+                text = "\"${quote.quote.message}\"",
                 lineHeight = 20.sp,
             )
-            Text(text = quote.author, modifier = Modifier.padding(top = 20.dp))
+            Text(text = quote.quote.author, modifier = Modifier.padding(top = 20.dp))
 
         }
     }
@@ -64,12 +93,14 @@ fun QuoteItemUIPreview() {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        QuoteItemUI(
-            QuoteEntity(
-                author = "ABC DEF",
-                message = "Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message "
-            )
-        ) {}
+//        QuoteItemUI(
+//            QuoteEntity(
+//                author = "ABC DEF",
+//                message = "Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message Message "
+//            ),
+//            onSelectedStateChanged = {},
+//            onClicked = {}
+//        )
 
     }
 }

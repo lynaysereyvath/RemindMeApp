@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface QuoteDao {
     @Query("select * from tblQuote order by id asc")
-    fun selectAll(): Flow<List<QuoteEntity>>
+    fun selectAll(): List<QuoteEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(quoteEntity: QuoteEntity)

@@ -5,7 +5,7 @@ import com.lynaysereyvath.remindme.domain.utils.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface QuoteRepository {
-    fun getAll(): Resource<Flow<List<QuoteEntity>>>
+    fun getAll(): Resource<List<QuoteEntity>>
 
     suspend fun insert(quoteEntity: QuoteEntity)
 

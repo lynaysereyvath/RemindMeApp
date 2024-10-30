@@ -1,15 +1,16 @@
 package com.lynaysereyvath.remindme.ui.add
 
-import android.os.Bundle
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -21,20 +22,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavArgument
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.lynaysereyvath.remindme.R
 import com.lynaysereyvath.remindme.domain.QuoteEntity
-import com.lynaysereyvath.remindme.ui.RemindMeAppScreen
+import com.lynaysereyvath.remindme.ui.theme.RemindMeTheme
+import com.lynaysereyvath.remindme.ui.theme.Surface
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,6 +58,10 @@ fun AddLayout(navController: NavController, id: Int? = null) {
     val titleTextStyle = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)
     val paragraphTextStyle = TextStyle(fontSize = 14.sp)
     val transparentContainerColor = TextFieldDefaults.colors(
+        focusedContainerColor = Color.Transparent,
+        unfocusedContainerColor = Color.Transparent,
+        focusedIndicatorColor = Color.Transparent,
+        unfocusedIndicatorColor = Color.Transparent
     )
 
     LaunchedEffect(key1 = true, block = {
@@ -65,80 +71,109 @@ fun AddLayout(navController: NavController, id: Int? = null) {
     })
 
     Scaffold(
+        modifier = Modifier.background(Surface),
         topBar = {
             TopAppBar(
                 title = { },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navController.popBackStack(RemindMeAppScreen.Home.name, inclusive = false)
+                        navController.popBackStack()
                     }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "arrow back")
                     }
+                },
+                actions = {
+                    IconButton(onClick = {
+                    }) {
+                        Icon(
+                            painterResource(R.drawable.outline_keep_24),
+                            contentDescription = "arrow back"
+                        )
+                    }
+                    IconButton(onClick = {
+                    }) {
+                        Icon(
+                            painterResource(R.drawable.outline_add_alert_24),
+                            contentDescription = "arrow back"
+                        )
+                    }
+                    IconButton(onClick = {
+                    }) {
+                        Icon(
+                            painterResource(R.drawable.outline_archive_24),
+                            contentDescription = "arrow back"
+                        )
+                    }
                 }
             )
-        }) {
+        },
+        bottomBar = {
+            BottomAppBar(
+                actions = {
+                    IconButton(onClick = {}) {
+                        Icon(Icons.Outlined.MoreVert, contentDescription = "")
+                    }
+                    IconButton(onClick = {}) {
+                        Icon(
+                            painterResource(R.drawable.outline_add_box_24),
+                            contentDescription = ""
+                        )
+                    }
+                    IconButton(onClick = {}) {
+                        Icon(
+                            painterResource(R.drawable.outline_palette_24),
+                            contentDescription = ""
+                        )
+                    }
+                    IconButton(onClick = {}) {
+                        Icon(
+                            painterResource(R.drawable.outline_text_format_24),
+                            contentDescription = ""
+                        )
+                    }
+                },
+                floatingActionButton = {
+                    FloatingActionButton(onClick = {
+                        onSubmit(QuoteEntity(author = name, message = message))
+                        navController.popBackStack()
+                    }) {
+                        Icon(
+                            painterResource(R.drawable.outline_forward_to_inbox_24),
+                            contentDescription = ""
+                        )
+                    }
+                }
+            )
+        }
+    ) {
 
         Column(modifier = Modifier.padding(it)) {
             TextField(
                 value = name,
-                onValueChange = { onNameEntered(it) },
+                onValueChange = { n -> onNameEntered(n) },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
+                    .fillMaxWidth(),
                 placeholder = {
                     Text(
                         text = "Author",
-                        style = titleTextStyle,
-                        color = Color.LightGray
                     )
                 },
                 colors = transparentContainerColor,
-                textStyle = titleTextStyle
+                textStyle = TextStyle(fontWeight = FontWeight.Medium, fontSize = 16.sp),
             )
             TextField(
                 value = message,
-                onValueChange = { onMessageEntered(it) },
+                onValueChange = { value -> onMessageEntered(value) },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
-                    .weight(1f),
+                    .fillMaxWidth(),
                 placeholder = {
                     Text(
                         "Quote",
-                        style = paragraphTextStyle,
-                        color = Color.LightGray
                     )
                 },
                 colors = transparentContainerColor,
-                textStyle = paragraphTextStyle
             )
-            Button(
-                onClick = {
-                    onSubmit(QuoteEntity(author = name, message = message))
-                    navController.popBackStack(RemindMeAppScreen.Home.name, inclusive = false)
-                },
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .fillMaxWidth(),
-                shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = Color.LightGray
-                )
-            ) {
-                Text(text = "Save")
-            }
         }
     }
 
 }
-
-//@Composable
-//@Preview
-//fun AddLayoutPreview() {
-//    RemindMeTheme {
-//        Surface(modifier = Modifier.fillMaxSize()) {
-//            AddLayout(onFinished = {}, onBack = {})
-//        }
-//    }
-//}

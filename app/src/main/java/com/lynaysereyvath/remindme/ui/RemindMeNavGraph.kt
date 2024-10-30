@@ -1,5 +1,7 @@
 package com.lynaysereyvath.remindme.ui
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,18 +22,29 @@ fun RemindMeNavGraph(
         navController = navController,
         startDestination = RemindMeRoute.Quotes
     ) {
-        composable(route = RemindMeRoute.Quotes) {
+        composable(
+            route = RemindMeRoute.Quotes,
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popExitTransition = { fadeOut() }) {
             HomeScreenLayout(
                 navController = navController,
                 remindMeNavigationActions = navigationActions,
                 openDrawer = openDrawer
             )
         }
-        composable(route = RemindMeRoute.Reminders) {
+        composable(
+            route = RemindMeRoute.Reminders,
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popExitTransition = { fadeOut() }) {
             SetScheduleScreen(navController = navController, openDrawer = openDrawer)
         }
 
-        composable(route = RemindMeRoute.AddQuote) {
+        composable(
+            route = RemindMeRoute.AddQuote,
+            enterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() }) {
             AddLayout(
                 navController = navController
             )

@@ -23,13 +23,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.lynaysereyvath.remindme.R
 import com.lynaysereyvath.remindme.ui.theme.Typography
+import kotlinx.coroutines.coroutineScope
 
 @Composable
 fun AppDrawer(
     modifier: Modifier = Modifier,
     drawerState: DrawerState,
     currentRoute: String,
-    navigationActions: RemindMeNavigationActions
+    navigationActions: RemindMeNavigationActions,
+    closeDrawer: () -> Unit
 ) {
 
     ModalDrawerSheet(drawerState = drawerState, modifier = modifier) {
@@ -43,7 +45,10 @@ fun AppDrawer(
 
         NavigationDrawerItem(
             label = { Text("Quotes") },
-            onClick = { navigationActions.navigateToQuote() },
+            onClick = {
+                closeDrawer()
+                navigationActions.navigateToQuote()
+            },
             selected = currentRoute == RemindMeRoute.Quotes,
             modifier = Modifier,
             icon = {
@@ -56,7 +61,10 @@ fun AppDrawer(
         )
         NavigationDrawerItem(
             label = { Text("Reminders") },
-            onClick = { navigationActions.navigateToReminders() },
+            onClick = {
+                closeDrawer()
+                navigationActions.navigateToReminders()
+            },
             selected = currentRoute == RemindMeRoute.Reminders,
             modifier = Modifier,
             icon = {
@@ -68,7 +76,9 @@ fun AppDrawer(
         )
         NavigationDrawerItem(
             label = { Text("Create new label") },
-            onClick = {},
+            onClick = {
+                closeDrawer()
+            },
             selected = currentRoute == RemindMeRoute.CreateNewLabel,
             modifier = Modifier,
             icon = {
@@ -80,7 +90,9 @@ fun AppDrawer(
         )
         NavigationDrawerItem(
             label = { Text("Archive") },
-            onClick = {},
+            onClick = {
+                closeDrawer()
+            },
             selected = currentRoute == RemindMeRoute.Archive,
             modifier = Modifier,
             icon = {
@@ -93,7 +105,9 @@ fun AppDrawer(
         )
         NavigationDrawerItem(
             label = { Text("Trash") },
-            onClick = {},
+            onClick = {
+                closeDrawer()
+            },
             selected = currentRoute == RemindMeRoute.Trash,
             modifier = Modifier,
             icon = {
@@ -105,7 +119,9 @@ fun AppDrawer(
         )
         NavigationDrawerItem(
             label = { Text("Settings") },
-            onClick = {},
+            onClick = {
+                closeDrawer()
+            },
             selected = currentRoute == RemindMeRoute.Settings,
             modifier = Modifier,
             icon = {
@@ -115,7 +131,9 @@ fun AppDrawer(
         )
         NavigationDrawerItem(
             label = { Text("Help & feedback") },
-            onClick = {},
+            onClick = {
+                closeDrawer()
+            },
             selected = currentRoute == RemindMeRoute.HelpAndFeedback,
             modifier = Modifier,
             icon = {
@@ -136,6 +154,7 @@ fun AppDrawerPreview() {
     AppDrawer(
         drawerState = rememberDrawerState(DrawerValue.Closed),
         currentRoute = RemindMeRoute.Quotes,
-        navigationActions = RemindMeNavigationActions(rememberNavController())
+        navigationActions = RemindMeNavigationActions(rememberNavController()),
+        closeDrawer = {}
     )
 }

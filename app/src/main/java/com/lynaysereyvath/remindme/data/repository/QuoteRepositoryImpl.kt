@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class QuoteRepositoryImpl @Inject constructor(private val quoteDao: QuoteDao): QuoteRepository {
-    override fun getAll(): Resource<Flow<List<QuoteEntity>>> {
+    override fun getAll(): Resource<List<QuoteEntity>> {
         return try {
             Resource.Success(data = quoteDao.selectAll())
         }

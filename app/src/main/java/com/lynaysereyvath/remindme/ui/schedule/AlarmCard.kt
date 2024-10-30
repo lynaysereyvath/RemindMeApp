@@ -66,7 +66,7 @@ fun AlarmCard(
             }
         },
         leadingContent = {
-            if (alarmEntity.isEnable())
+            if (checkedState)
                 Icon(painterResource(R.drawable.outline_alarm_on_24), "alarm")
             else
                 Icon(painterResource(R.drawable.outline_alarm_off_24), "alarm")

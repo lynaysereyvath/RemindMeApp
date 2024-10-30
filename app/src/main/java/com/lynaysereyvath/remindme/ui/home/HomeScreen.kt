@@ -1,14 +1,16 @@
 package com.lynaysereyvath.remindme.ui.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.BottomAppBar
@@ -35,10 +37,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.lynaysereyvath.remindme.R
 import com.lynaysereyvath.remindme.ui.RemindMeAppScreen
 import com.lynaysereyvath.remindme.ui.RemindMeNavigationActions
+import com.lynaysereyvath.remindme.ui.theme.RemindMeTheme
+import com.lynaysereyvath.remindme.ui.theme.Surface
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,7 +59,6 @@ fun HomeScreenLayout(
         viewModel.getQuoteList()
     })
 
-    val quoteList by viewModel.quoteList.collectAsStateWithLifecycle()
 
     val keyWord by viewModel.searchKeyword.collectAsStateWithLifecycle()
     val onKeyWordEntered: (value: String) -> Unit = remember {
@@ -65,38 +67,95 @@ fun HomeScreenLayout(
 
 
     Scaffold(
-        modifier = Modifier.safeContentPadding(),
+        modifier = Modifier.safeContentPadding().background(Surface),
         topBar = {
-            TopAppBar(title = { Text("Search your quote", fontSize = 16.sp) }, navigationIcon = {
-                IconButton(
-                    onClick = openDrawer
-                ) {
-                    Icon(Icons.Outlined.Menu, "Search")
+            TopAppBar(title = {
+                if (!viewModel.isItemsSelected) Text(
+                    "Search your quote",
+                    fontSize = 16.sp
+                )
+            }, navigationIcon = {
+                if (viewModel.isItemsSelected) {
+                    IconButton(
+                        onClick = viewModel.cancelAllSelections
+                    ) {
+                        Icon(Icons.Outlined.Close, "cancel selections")
+                    }
+                } else {
+                    IconButton(
+                        onClick = openDrawer
+                    ) {
+                        Icon(Icons.Outlined.Menu, "menu")
+                    }
                 }
+
 
             }, actions = {
 
-                IconButton(
-                    onClick = openDrawer,
-                    modifier = Modifier.padding(horizontal = 10.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.outline_view_agenda_24), "filter",
-                    )
-                }
+                if (viewModel.isItemsSelected) {
+                    IconButton(
+                        onClick = {},
+                        modifier = Modifier.padding(horizontal = 10.dp)
+                    ) {
+                        Icon(
+                            painterResource(R.drawable.outline_keep_24), "filter",
+                        )
+                    }
 
-                IconButton(
-                    onClick = openDrawer
-                ) {
-                    Icon(
-                        Icons.Outlined.Person,
-                        "profile",
-                        modifier = Modifier
-                            .background(Color.White, CircleShape)
-                            .clip(CircleShape)
-                    )
-                }
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(
+                            painterResource(R.drawable.outline_add_alert_24),
+                            "profile",
+                        )
+                    }
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(
+                            painterResource(R.drawable.outline_palette_24),
+                            "profile",
+                        )
+                    }
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(
+                            painterResource(R.drawable.outline_label_24),
+                            "profile",
+                        )
+                    }
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(
+                            painterResource(R.drawable.outline_add_alert_24),
+                            "profile",
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = {},
+                        modifier = Modifier.padding(horizontal = 10.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.outline_view_agenda_24), "filter",
+                        )
+                    }
 
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(
+                            Icons.Outlined.Person,
+                            "profile",
+                            modifier = Modifier
+                                .background(Color.White, CircleShape)
+                                .clip(CircleShape)
+                        )
+                    }
+                }
             }
             )
         },
@@ -130,12 +189,15 @@ fun HomeScreenLayout(
 
         LazyColumn(modifier = modifier.padding(padding))
         {
-            items(quoteList)
-            { quote ->
-                QuoteItemUI(quote) {
-//                    navController.navigate("${RemindMeAppScreen.Add.name}?id=${quote.id}")
-                }
+            items(viewModel.quoteList, key = { it.quote.id }) {
+                QuoteItemUI(
+                    it,
+                    isSelectableOnClick = viewModel.isSelectableOnClick,
+                    onSelectedStateChanged = viewModel.toggleSelection,
+                    onClicked = {}
+                )
             }
+
         }
     }
 }
