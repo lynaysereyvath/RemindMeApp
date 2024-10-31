@@ -8,7 +8,12 @@ import com.lynaysereyvath.remindme.domain.QuoteEntity
 import com.lynaysereyvath.remindme.domain.repository.AlarmDao
 import com.lynaysereyvath.remindme.domain.repository.QuoteDao
 
-@Database(entities = [QuoteEntity::class, AlarmEntity::class], version = 1, exportSchema = true)
+@Database(
+    entities = [QuoteEntity::class, AlarmEntity::class],
+    version = 2,
+    exportSchema = true,
+    autoMigrations = [AutoMigration(from = 1, to = 2)]
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun quoteDao(): QuoteDao
     abstract fun alarmDao(): AlarmDao

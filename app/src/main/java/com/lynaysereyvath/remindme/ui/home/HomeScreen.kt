@@ -1,5 +1,6 @@
 package com.lynaysereyvath.remindme.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
@@ -17,6 +18,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,14 +47,14 @@ fun HomeScreenLayout(
 
     Scaffold(
         modifier = Modifier
-            .safeContentPadding()
-            .background(Surface),
+            .background(Color.Blue),
         topBar = {
             HomeTopAppBar(viewModel, openDrawer)
         },
         bottomBar = {
             BottomAppBar(actions = {
-                IconButton(onClick = { navController.navigate(RemindMeAppScreen.Schedule.name) }) {
+                /**
+                IconButton(onClick = { }) {
                     Icon(painterResource(R.drawable.outline_check_box_24), "Schedule")
                 }
                 IconButton(onClick = { /*TODO*/ }) {
@@ -64,6 +66,7 @@ fun HomeScreenLayout(
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(painterResource(R.drawable.outline_photo_24), "Setting")
                 }
+                */
             }, floatingActionButton = {
                 FloatingActionButton(
                     onClick = {
@@ -81,6 +84,7 @@ fun HomeScreenLayout(
         LazyColumn(modifier = modifier.padding(padding))
         {
             items(viewModel.quoteList, key = { it.quote.id }) {
+                Log.i("HomeScreen", it.quote.id.toString())
                 QuoteItemUI(
                     it,
                     isSelectableOnClick = viewModel.isSelectableOnClick,

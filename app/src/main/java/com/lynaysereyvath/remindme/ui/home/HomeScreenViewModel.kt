@@ -39,7 +39,7 @@ class HomeScreenViewModel @Inject constructor(private val repository: QuoteRepos
 
     var isItemsSelected by mutableStateOf(false)
 
-    val toggleSelection: (id: Int, isSelected: Boolean) -> Unit = { id, isSelected ->
+    val toggleSelection: (id: Long, isSelected: Boolean) -> Unit = { id, isSelected ->
         Log.i(this.javaClass.name, "toggleSelection: $id")
         //To Do something with the id later
 
@@ -56,23 +56,28 @@ class HomeScreenViewModel @Inject constructor(private val repository: QuoteRepos
     val isSelectableOnClick: () -> Boolean = { isItemsSelected }
 
     val cancelAllSelections: () -> Unit = {
-        for (i in 0 until _quoteList.size) {
-            val item = QuoteState(_quoteList[i].quote, false)
-            _quoteList[i] = item
-            Log.i(this.javaClass.name, "cancelAllSelections: ${_quoteList[i].isSelected}")
+        if (_quoteList.size > 0)
+            for (i in 0 until _quoteList.size) {
+                val item = QuoteState(_quoteList[i].quote, false)
+                _quoteList[i] = item
+                Log.i(this.javaClass.name, "cancelAllSelections: ${_quoteList[i].isSelected}")
 
-        }
+            }
         isItemsSelected = false
     }
 
-    fun delete() {
+    fun delete(onDeleted: (ArrayList<Long>) -> Unit) {
+        val deletedIds = arrayListOf<Long>()
         for (i in _quoteList) {
             if (i.isSelected) {
                 viewModelScope.launch(Dispatchers.IO) {
+                    deletedIds.add(i.quote.id)
                     repository.delete(i.quote)
                     _quoteList.remove(i)
                 }
             }
         }
+        isItemsSelected = false
+        onDeleted(deletedIds)
     }
 }

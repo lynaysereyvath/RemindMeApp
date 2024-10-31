@@ -36,8 +36,8 @@ class RemindMeNavigationActions(navController: NavHostController) {
             restoreState = true
         }
     }
-    val navigateToAddQuote: (id: Int?) -> Unit = { id ->
-        navController.navigate(if (id != null) "${RemindMeRoute.AddQuote}/$id" else RemindMeRoute.AddQuote) {
+    val navigateToAddQuote: (id: Long?) -> Unit = { id ->
+        navController.navigate(if (id != null) "${RemindMeRoute.AddQuote}?id=$id" else RemindMeRoute.AddQuote) {
             launchSingleTop = true
         }
     }

@@ -15,13 +15,13 @@ interface QuoteDao {
     fun selectAll(): List<QuoteEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(quoteEntity: QuoteEntity)
+    suspend fun insert(quoteEntity: QuoteEntity): Long
 
     @Delete
-    suspend fun delete(quoteEntity: QuoteEntity)
+    suspend fun delete(quoteEntity: QuoteEntity): Int
 
     @Update
-    suspend fun update(quoteEntity: QuoteEntity)
+    suspend fun update(quoteEntity: QuoteEntity): Int
 
     @Query("delete from tblQuote")
     suspend fun deleteAll()
@@ -33,6 +33,6 @@ interface QuoteDao {
     suspend fun getCount(): Int
 
     @Query("select * from tblQuote where id = :id")
-    suspend fun selectById(id: Int): QuoteEntity
+    suspend fun selectById(id: Long): QuoteEntity
 
 }

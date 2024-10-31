@@ -14,6 +14,8 @@ navigationCompose = "2.8.3"
 room = "2.6.1"
 compose-runtime = "1.7.4"
 ksp = "2.0.20-1.0.25"
+gson = "2.11.0"
+datastore-preferences = "1.1.1"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -30,27 +32,31 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-savedstate = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "lifecycleRuntimeKtx" }
 
-androidx-compose-material3 = { group = "androidx.compose.material3", name="material3" }
-androidx-navigation-compose = { group = "androidx.navigation", name="navigation-compose", version.ref = "navigationCompose" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
-androidx-compose-runtime = { group = "androidx.compose.runtime", name="runtime", version.ref = "compose-runtime" }
-androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name ="runtime-livedata", version.ref = "compose-runtime" }
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose-runtime" }
+androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "compose-runtime" }
 
-androidx-compose-ui = { group = "androidx.compose.ui", name="ui" }
-androidx-compose-ui-graphics = { group = "androidx.compose.ui", name="ui-graphics" }
-androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name="ui-test-junit4" }
-androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name="ui-test-manifest" }
-androidx-compose-ui-tooling = { group = "androidx.compose.ui", name="ui-tooling" }
-androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name="ui-tooling-preview" }
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 
 
 com-google-dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltAndroid" }
 com-google-dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hiltAndroid" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
-androidx-room-compiler = { group = "androidx.room", name="room-compiler", version.ref = "room" }
-androidx-room-ktx = { group = "androidx.room", name="room-ktx", version.ref = "room" }
-androidx-room-runtime = { group = "androidx.room", name="room-runtime", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+
+com-google-code-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore-preferences" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }

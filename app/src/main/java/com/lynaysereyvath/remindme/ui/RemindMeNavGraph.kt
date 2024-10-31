@@ -44,8 +44,8 @@ fun RemindMeNavGraph(
         }
 
         composable(
-            route = "${RemindMeRoute.AddQuote}/{id}", arguments = listOf(navArgument("id") {
-                type = NavType.IntType
+            route = "${RemindMeRoute.AddQuote}?id={id}", arguments = listOf(navArgument("id") {
+                type = NavType.LongType
                 defaultValue = -1
             }),
             enterTransition = { fadeIn() },

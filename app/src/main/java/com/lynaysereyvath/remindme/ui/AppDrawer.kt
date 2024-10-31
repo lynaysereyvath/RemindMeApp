@@ -74,6 +74,7 @@ fun AppDrawer(
             },
             colors = NavigationDrawerItemDefaults.colors(),
         )
+        /**
         NavigationDrawerItem(
             label = { Text("Create new label") },
             onClick = {
@@ -144,6 +145,7 @@ fun AppDrawer(
             },
             colors = NavigationDrawerItemDefaults.colors(),
         )
+        */
 
     }
 }

@@ -1,6 +1,7 @@
 package com.lynaysereyvath.remindme.ui.schedule
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth

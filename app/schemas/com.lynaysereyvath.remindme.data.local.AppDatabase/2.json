@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "96fdf13c1d1bad6740ae798a2422c793",
+    "identityHash": "efa6d374c096cca2f1f87fcbf53bbd47",
     "entities": [
       {
         "tableName": "tblQuote",
@@ -38,7 +38,7 @@
       },
       {
         "tableName": "tblAlarm",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `alarmTime` INTEGER NOT NULL, `isEnabled` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, `isEnabled` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -47,8 +47,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "alarmTime",
-            "columnName": "alarmTime",
+            "fieldPath": "hour",
+            "columnName": "hour",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "minute",
+            "columnName": "minute",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -72,7 +78,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '96fdf13c1d1bad6740ae798a2422c793')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'efa6d374c096cca2f1f87fcbf53bbd47')"
     ]
   }
 }

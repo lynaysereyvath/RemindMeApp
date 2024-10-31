@@ -7,27 +7,29 @@ import com.lynaysereyvath.remindme.domain.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class QuoteRepositoryImpl @Inject constructor(private val quoteDao: QuoteDao): QuoteRepository {
+class QuoteRepositoryImpl @Inject constructor(private val quoteDao: QuoteDao) : QuoteRepository {
     override fun getAll(): Resource<List<QuoteEntity>> {
         return try {
             Resource.Success(data = quoteDao.selectAll())
-        }
-        catch (e: Exception)
-        {
+        } catch (e: Exception) {
             Resource.Error(message = "", exception = e)
         }
     }
 
-    override suspend fun insert(quoteEntity: QuoteEntity) {
-        quoteDao.insert(quoteEntity)
+    override suspend fun insert(quoteEntity: QuoteEntity): Resource<Long> {
+        return try {
+            Resource.Success(quoteDao.insert(quoteEntity))
+        } catch (e: Exception) {
+            Resource.Error(message = "inserting fail", exception = e)
+        }
     }
 
-    override suspend fun delete(quoteEntity: QuoteEntity) {
-        quoteDao.delete(quoteEntity)
+    override suspend fun delete(quoteEntity: QuoteEntity): Int {
+        return quoteDao.delete(quoteEntity)
     }
 
-    override suspend fun update(quoteEntity: QuoteEntity) {
-        quoteDao.update(quoteEntity)
+    override suspend fun update(quoteEntity: QuoteEntity): Int {
+        return quoteDao.update(quoteEntity)
     }
 
     override suspend fun deleteAll() {
@@ -42,7 +44,7 @@ class QuoteRepositoryImpl @Inject constructor(private val quoteDao: QuoteDao): Q
         return quoteDao.getCount()
     }
 
-    override suspend fun selectById(id: Int): QuoteEntity {
+    override suspend fun selectById(id: Long): QuoteEntity {
         return quoteDao.selectById(id)
     }
 }

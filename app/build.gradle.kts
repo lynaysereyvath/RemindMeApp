@@ -103,6 +103,9 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.runtime.compose)
 
+    implementation(libs.com.google.code.gson)
+    implementation(libs.androidx.datastore.preferences)
+
 }
 
 kapt {

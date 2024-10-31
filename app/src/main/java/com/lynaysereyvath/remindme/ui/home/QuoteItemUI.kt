@@ -39,8 +39,8 @@ import androidx.compose.ui.unit.sp
 fun QuoteItemUI(
     quote: QuoteState,
     isSelectableOnClick: () -> Boolean,
-    onClicked: (id: Int) -> Unit,
-    onSelectedStateChanged: (id: Int, isSelected: Boolean) -> Unit
+    onClicked: (id: Long) -> Unit,
+    onSelectedStateChanged: (id: Long, isSelected: Boolean) -> Unit
 ) {
 
     val interactionSource = remember { MutableInteractionSource() }

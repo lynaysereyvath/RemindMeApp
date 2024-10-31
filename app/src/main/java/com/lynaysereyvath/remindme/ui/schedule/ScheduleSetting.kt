@@ -77,18 +77,18 @@ fun SetScheduleScreen(
                         Icon(Icons.Outlined.Menu, "")
                     }
                 },
-                actions = {
-                    IconButton(onClick = {
-                        navController.navigateUp()
-                    }) {
-                        Icon(Icons.Outlined.Search, "")
-                    }
-                    IconButton(onClick = {
-                        navController.navigateUp()
-                    }) {
-                        Icon(painterResource(R.drawable.outline_view_agenda_24), "")
-                    }
-                }
+//                actions = {
+//                    IconButton(onClick = {
+//                        navController.navigateUp()
+//                    }) {
+//                        Icon(Icons.Outlined.Search, "")
+//                    }
+//                    IconButton(onClick = {
+//                        navController.navigateUp()
+//                    }) {
+//                        Icon(painterResource(R.drawable.outline_view_agenda_24), "")
+//                    }
+//                }
             )
         },
         floatingActionButton = {
