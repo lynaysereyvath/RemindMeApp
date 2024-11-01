@@ -5,6 +5,7 @@ import com.lynaysereyvath.remindme.domain.repository.QuoteDao
 import com.lynaysereyvath.remindme.domain.repository.QuoteRepository
 import com.lynaysereyvath.remindme.domain.utils.Resource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 class QuoteRepositoryImpl @Inject constructor(private val quoteDao: QuoteDao) : QuoteRepository {
@@ -46,5 +47,9 @@ class QuoteRepositoryImpl @Inject constructor(private val quoteDao: QuoteDao) : 
 
     override suspend fun selectById(id: Long): QuoteEntity {
         return quoteDao.selectById(id)
+    }
+
+    override suspend fun search(query: String): Flow<List<QuoteEntity>> {
+        return flowOf(quoteDao.search(query))
     }
 }

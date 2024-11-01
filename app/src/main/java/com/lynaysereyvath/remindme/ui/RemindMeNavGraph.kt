@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import com.lynaysereyvath.remindme.ui.add.AddLayout
 import com.lynaysereyvath.remindme.ui.home.HomeScreenLayout
 import com.lynaysereyvath.remindme.ui.schedule.SetScheduleScreen
+import com.lynaysereyvath.remindme.ui.search.SearchScreen
 
 @Composable
 fun RemindMeNavGraph(
@@ -50,9 +51,15 @@ fun RemindMeNavGraph(
             }),
             enterTransition = { fadeIn() },
             popExitTransition = { fadeOut() }) {
-            AddLayout(
-                navController = navController
-            )
+            AddLayout(navController = navController)
+        }
+
+        composable(
+            route = RemindMeRoute.Search,
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popExitTransition = { fadeOut() }) {
+            SearchScreen(navController, navigationActions)
         }
     }
 }

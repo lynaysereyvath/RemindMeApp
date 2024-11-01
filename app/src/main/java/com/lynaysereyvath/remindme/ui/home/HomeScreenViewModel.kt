@@ -31,12 +31,6 @@ class HomeScreenViewModel @Inject constructor(private val repository: QuoteRepos
         }
     }
 
-    private val _searchKeyWord = MutableStateFlow<String>("")
-    val searchKeyword = _searchKeyWord.asStateFlow()
-    fun setSearchKeyWord(word: String) {
-        _searchKeyWord.tryEmit(word)
-    }
-
     var isItemsSelected by mutableStateOf(false)
 
     val toggleSelection: (id: Long, isSelected: Boolean) -> Unit = { id, isSelected ->

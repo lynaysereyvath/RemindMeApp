@@ -1,6 +1,7 @@
 package com.lynaysereyvath.remindme.ui.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
@@ -37,7 +38,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopAppBar(viewModel: HomeScreenViewModel, openDrawer: () -> Unit) {
+fun HomeTopAppBar(viewModel: HomeScreenViewModel, openDrawer: () -> Unit, goToSearch: () -> Unit) {
 
     var expanded by remember { mutableStateOf(false) }
 //    LaunchedEffect(expanded) {
@@ -47,30 +48,32 @@ fun HomeTopAppBar(viewModel: HomeScreenViewModel, openDrawer: () -> Unit) {
 //    }
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    TopAppBar(title = {
-        if (!viewModel.isItemsSelected) Text(
-            "Search your quote",
-            fontSize = 16.sp
-        )
-    }, navigationIcon = {
-        if (viewModel.isItemsSelected) {
-            IconButton(
-                onClick = viewModel.cancelAllSelections
-            ) {
-                Icon(Icons.Outlined.Close, "cancel selections")
+    TopAppBar(
+        modifier = Modifier.clickable(onClick = goToSearch),
+        title = {
+            if (!viewModel.isItemsSelected) Text(
+                "Search your quote",
+                fontSize = 16.sp,
+            )
+        }, navigationIcon = {
+            if (viewModel.isItemsSelected) {
+                IconButton(
+                    onClick = viewModel.cancelAllSelections
+                ) {
+                    Icon(Icons.Outlined.Close, "cancel selections")
+                }
+            } else {
+                IconButton(
+                    onClick = openDrawer
+                ) {
+                    Icon(Icons.Outlined.Menu, "menu")
+                }
             }
-        } else {
-            IconButton(
-                onClick = openDrawer
-            ) {
-                Icon(Icons.Outlined.Menu, "menu")
-            }
-        }
 
 
-    }, actions = {
+        }, actions = {
 
-        if (viewModel.isItemsSelected) {
+            if (viewModel.isItemsSelected) {
 //            IconButton(
 //                onClick = {},
 //                modifier = Modifier.padding(horizontal = 10.dp)
@@ -105,38 +108,38 @@ fun HomeTopAppBar(viewModel: HomeScreenViewModel, openDrawer: () -> Unit) {
 //                    "profile",
 //                )
 //            }
-            Box {
-                IconButton(
-                    onClick = {
-                        expanded = true
-                    }
-                ) {
-                    Icon(
-                        Icons.Outlined.MoreVert,
-                        "more",
-                    )
-                }
-                DropdownMenu(expanded = expanded, onDismissRequest = {
-                    expanded = false
-                    viewModel.cancelAllSelections()
-                }) {
-//                    DropdownMenuItem(text = { Text("Archive") }, onClick = { expanded = false })
-                    DropdownMenuItem(text = { Text("Delete") }, onClick = {
-                        expanded = false
-                        viewModel.delete() {
-                            coroutineScope.launch(Dispatchers.IO) {
-                                context.deleteKeys(it)
-                            }
+                Box {
+                    IconButton(
+                        onClick = {
+                            expanded = true
                         }
-                    })
+                    ) {
+                        Icon(
+                            Icons.Outlined.MoreVert,
+                            "more",
+                        )
+                    }
+                    DropdownMenu(expanded = expanded, onDismissRequest = {
+                        expanded = false
+                        viewModel.cancelAllSelections()
+                    }) {
+//                    DropdownMenuItem(text = { Text("Archive") }, onClick = { expanded = false })
+                        DropdownMenuItem(text = { Text("Delete") }, onClick = {
+                            expanded = false
+                            viewModel.delete() {
+                                coroutineScope.launch(Dispatchers.IO) {
+                                    context.deleteKeys(it)
+                                }
+                            }
+                        })
 //                    DropdownMenuItem(text = { Text("Make a copy") }, onClick = { expanded = false })
 //                    DropdownMenuItem(text = { Text("Send") }, onClick = { expanded = false })
 //                    DropdownMenuItem(
 //                        text = { Text("Copy to Google Docs") },
 //                        onClick = { expanded = false })
+                    }
                 }
-            }
-        } else {
+            } else {
 //            IconButton(
 //                onClick = {},
 //                modifier = Modifier.padding(horizontal = 10.dp)
@@ -157,7 +160,7 @@ fun HomeTopAppBar(viewModel: HomeScreenViewModel, openDrawer: () -> Unit) {
 //                        .clip(CircleShape)
 //                )
 //            }
+            }
         }
-    }
     )
 }

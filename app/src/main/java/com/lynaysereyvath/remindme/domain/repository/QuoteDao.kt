@@ -35,4 +35,7 @@ interface QuoteDao {
     @Query("select * from tblQuote where id = :id")
     suspend fun selectById(id: Long): QuoteEntity
 
+    @Query("select * from tblQuote where message like '%' || :query || '%' or author like '%' || :query || '%' order by id asc")
+    suspend fun search(query: String): List<QuoteEntity>
+
 }

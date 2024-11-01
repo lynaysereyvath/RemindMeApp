@@ -49,7 +49,7 @@ fun HomeScreenLayout(
         modifier = Modifier
             .background(Color.Blue),
         topBar = {
-            HomeTopAppBar(viewModel, openDrawer)
+            HomeTopAppBar(viewModel = viewModel, openDrawer = openDrawer, goToSearch = { remindMeNavigationActions.navigateToSearch() })
         },
         bottomBar = {
             BottomAppBar(actions = {

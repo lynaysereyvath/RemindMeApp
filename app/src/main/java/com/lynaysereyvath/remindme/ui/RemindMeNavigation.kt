@@ -12,6 +12,7 @@ object RemindMeRoute {
     const val Trash = "trash"
     const val HelpAndFeedback = "helpAndFeedback"
     const val AddQuote = "AddQuote"
+    const val Search = "search"
 }
 
 class RemindMeNavigationActions(navController: NavHostController) {
@@ -39,6 +40,13 @@ class RemindMeNavigationActions(navController: NavHostController) {
     val navigateToAddQuote: (id: Long?) -> Unit = { id ->
         navController.navigate(if (id != null) "${RemindMeRoute.AddQuote}?id=$id" else RemindMeRoute.AddQuote) {
             launchSingleTop = true
+        }
+    }
+
+    val navigateToSearch = {
+        navController.navigate(RemindMeRoute.Search) {
+            launchSingleTop = true
+            restoreState = true
         }
     }
 }

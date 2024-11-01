@@ -18,4 +18,5 @@ interface QuoteRepository {
     suspend fun getOne(): QuoteEntity
     suspend fun getCount(): Int
     suspend fun selectById(id: Long): QuoteEntity
+    suspend fun search(query: String): Flow<List<QuoteEntity>>
 }
