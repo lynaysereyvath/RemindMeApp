@@ -10,9 +10,9 @@ interface AlarmRepository {
 
     suspend fun insert(alarmEntity: AlarmEntity)
 
-    suspend fun delete(alarmEntity: AlarmEntity)
+    suspend fun delete(alarmEntity: AlarmEntity): Int
 
-    suspend fun update(alarmEntity: AlarmEntity)
+    suspend fun update(alarmEntity: AlarmEntity): Int
 
     suspend fun deleteAll()
 }

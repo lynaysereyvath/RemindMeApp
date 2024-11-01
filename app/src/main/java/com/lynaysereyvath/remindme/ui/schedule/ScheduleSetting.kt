@@ -61,6 +61,10 @@ fun SetScheduleScreen(
 ) {
     val mViewModel = hiltViewModel<ScheduleViewModel>()
 
+    val context = LocalContext.current
+    val alarmManager =
+        context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
     LaunchedEffect(key1 = true, block = {
         mViewModel.getAlarmList()
     })
@@ -100,7 +104,6 @@ fun SetScheduleScreen(
         },
         floatingActionButtonPosition = FabPosition.Center,
     ) {
-        val context = LocalContext.current
 
         if (alarmEntities.isEmpty()) {
             Column(
@@ -134,34 +137,45 @@ fun SetScheduleScreen(
                 ) { alarmEntity ->
                     AlarmCard(
                         modifier = Modifier.padding(10.dp),
-                        alarmEntity = alarmEntity
-                    ) { item ->
-                        mViewModel.updateAlarmEntity(item)
-                        val alarmManager =
-                            context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                        val intent = Intent(context, AlarmReceiver::class.java)
-                        val pendingIntent = PendingIntent.getBroadcast(
-                            context.applicationContext,
-                            item.id,
-                            intent,
-                            PendingIntent.FLAG_IMMUTABLE
-                        )
-                        if (item.isEnable()) {
-                            val cal = Calendar.getInstance()
-                            cal.set(Calendar.HOUR_OF_DAY, item.hour)
-                            cal.set(Calendar.MINUTE, item.minute)
-                            alarmManager.setRepeating(
-                                AlarmManager.RTC_WAKEUP,
-                                cal.timeInMillis,
-                                AlarmManager.INTERVAL_DAY,
-                                pendingIntent
+                        alarmEntity = alarmEntity, onCheckedChange =
+                        { item ->
+                            mViewModel.updateAlarmEntity(item)
+
+                            val intent = Intent(context, AlarmReceiver::class.java)
+                            val pendingIntent = PendingIntent.getBroadcast(
+                                context.applicationContext,
+                                item.id,
+                                intent,
+                                PendingIntent.FLAG_IMMUTABLE
                             )
+                            if (item.isEnable()) {
+                                val cal = Calendar.getInstance()
+                                cal.set(Calendar.HOUR_OF_DAY, item.hour)
+                                cal.set(Calendar.MINUTE, item.minute)
+                                alarmManager.setRepeating(
+                                    AlarmManager.RTC_WAKEUP,
+                                    cal.timeInMillis,
+                                    AlarmManager.INTERVAL_DAY,
+                                    pendingIntent
+                                )
 //                                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.timeInMillis, 120000, pendingIntent)
 //                                alarmManager.set(AlarmManager.RTC_WAKEUP, cal.timeInMillis, pendingIntent)
-                        } else {
+                            } else {
+                                alarmManager.cancel(pendingIntent)
+                            }
+                        }, onDeleted = { entity ->
+                            val intent = Intent(context, AlarmReceiver::class.java)
+                            val pendingIntent = PendingIntent.getBroadcast(
+                                context.applicationContext,
+                                entity.id,
+                                intent,
+                                PendingIntent.FLAG_IMMUTABLE
+                            )
+
                             alarmManager.cancel(pendingIntent)
-                        }
-                    }
+
+                            mViewModel.deleteAlarmEntity(entity)
+                        })
                 }
 
             }

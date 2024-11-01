@@ -19,10 +19,10 @@ interface AlarmDao {
     suspend fun insert(alarmEntity: AlarmEntity)
 
     @Delete
-    suspend fun delete(alarmEntity: AlarmEntity)
+    suspend fun delete(alarmEntity: AlarmEntity): Int
 
     @Update
-    suspend fun update(alarmEntity: AlarmEntity)
+    suspend fun update(alarmEntity: AlarmEntity): Int
 
     @Query("delete from tblAlarm")
     suspend fun deleteAll()

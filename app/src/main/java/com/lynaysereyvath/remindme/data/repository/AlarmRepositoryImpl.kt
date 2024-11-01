@@ -20,12 +20,12 @@ class AlarmRepositoryImpl @Inject constructor(private val alarmDao: AlarmDao) : 
         alarmDao.insert(alarmEntity)
     }
 
-    override suspend fun delete(alarmEntity: AlarmEntity) {
-        alarmDao.delete(alarmEntity)
+    override suspend fun delete(alarmEntity: AlarmEntity): Int {
+        return alarmDao.delete(alarmEntity)
     }
 
-    override suspend fun update(alarmEntity: AlarmEntity) {
-        alarmDao.update(alarmEntity)
+    override suspend fun update(alarmEntity: AlarmEntity): Int {
+        return alarmDao.update(alarmEntity)
     }
 
     override suspend fun deleteAll() {

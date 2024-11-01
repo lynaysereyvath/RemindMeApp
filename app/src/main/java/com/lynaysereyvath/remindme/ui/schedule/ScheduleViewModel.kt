@@ -13,10 +13,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ScheduleViewModel @Inject constructor(private val repository: AlarmRepository): ViewModel() {
+class ScheduleViewModel @Inject constructor(private val repository: AlarmRepository) : ViewModel() {
 
     private val _alarmList = MutableStateFlow(emptyList<AlarmEntity>())
     val alarmList = _alarmList.asStateFlow()
+
+    private val _selectedState = MutableStateFlow(false)
+    val selectedState = _selectedState.asStateFlow()
+
     fun getAlarmList() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getAll().data?.collectLatest {
@@ -34,6 +38,12 @@ class ScheduleViewModel @Inject constructor(private val repository: AlarmReposit
     fun updateAlarmEntity(alarmEntity: AlarmEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.update(alarmEntity)
+        }
+    }
+
+    fun deleteAlarmEntity(alarmEntity: AlarmEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.delete(alarmEntity)
         }
     }
 
