@@ -10,11 +10,12 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "app_datastore")
 
-suspend fun Context.readString(keyName: String): Flow<String> {
+fun Context.readString(keyName: String): Flow<String> {
     val stringKey = stringPreferencesKey(keyName)
     val data = this.dataStore.data.map { preferences ->
         preferences[stringKey] ?: ""

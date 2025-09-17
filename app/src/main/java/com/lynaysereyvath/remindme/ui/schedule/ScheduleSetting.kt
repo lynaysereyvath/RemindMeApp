@@ -1,9 +1,7 @@
 package com.lynaysereyvath.remindme.ui.schedule
 
 import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +14,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -138,41 +135,21 @@ fun SetScheduleScreen(
                     AlarmCard(
                         modifier = Modifier.padding(10.dp),
                         alarmEntity = alarmEntity, onCheckedChange =
-                        { item ->
-                            mViewModel.updateAlarmEntity(item)
+                            { item ->
+                                mViewModel.updateAlarmEntity(item)
 
-                            val intent = Intent(context, AlarmReceiver::class.java)
-                            val pendingIntent = PendingIntent.getBroadcast(
-                                context.applicationContext,
-                                item.id,
-                                intent,
-                                PendingIntent.FLAG_IMMUTABLE
-                            )
-                            if (item.isEnable()) {
-                                val cal = Calendar.getInstance()
-                                cal.set(Calendar.HOUR_OF_DAY, item.hour)
-                                cal.set(Calendar.MINUTE, item.minute)
-                                alarmManager.setRepeating(
-                                    AlarmManager.RTC_WAKEUP,
-                                    cal.timeInMillis,
-                                    AlarmManager.INTERVAL_DAY,
-                                    pendingIntent
-                                )
-//                                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.timeInMillis, 120000, pendingIntent)
-//                                alarmManager.set(AlarmManager.RTC_WAKEUP, cal.timeInMillis, pendingIntent)
-                            } else {
-                                alarmManager.cancel(pendingIntent)
-                            }
-                        }, onDeleted = { entity ->
-                            val intent = Intent(context, AlarmReceiver::class.java)
-                            val pendingIntent = PendingIntent.getBroadcast(
-                                context.applicationContext,
-                                entity.id,
-                                intent,
-                                PendingIntent.FLAG_IMMUTABLE
-                            )
-
-                            alarmManager.cancel(pendingIntent)
+                                if (item.isEnable()) {
+                                    scheduleExactAlarm(
+                                        context,
+                                        alarmEntity.hour,
+                                        alarmEntity.minute,
+                                        alarmEntity.id
+                                    )
+                                } else {
+                                    cancelRepeatingAlarm(context, alarmEntity.id, alarmEntity.hour, alarmEntity.minute)
+                                }
+                            }, onDeleted = { entity ->
+                            cancelRepeatingAlarm(context, entity.id, entity.hour, entity.minute)
 
                             mViewModel.deleteAlarmEntity(entity)
                         })

@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.lynaysereyvath.remindme"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.lynaysereyvath.remindme"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 7
         versionName = "2.1.0"
 
@@ -105,6 +105,11 @@ dependencies {
 
     implementation(libs.com.google.code.gson)
     implementation(libs.androidx.datastore.preferences)
+
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.work)
+    implementation(libs.androidx.hilt.common)
+    ksp(libs.androidx.hilt.compiler)
 
 }
 
