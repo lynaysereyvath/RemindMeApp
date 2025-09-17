@@ -20,7 +20,7 @@ const val REPEATING_ALARM_REQUEST_CODE = 100
 const val REPEATING_INTERVAL_MILLIS = AlarmManager.INTERVAL_DAY
 
 @AndroidEntryPoint
-class AlarmReceiver: BroadcastReceiver() {
+class AlarmReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var repository: QuoteRepository
@@ -55,8 +55,6 @@ class AlarmReceiver: BroadcastReceiver() {
                     ExistingWorkPolicy.REPLACE, workRequest
                 )
             }
-        } else if (intent?.action == CANCEL_ALARM_ACTION) {
-            cancelRepeatingAlarm(context.applicationContext, intent.getIntExtra("alarmId", 0), 0, 0)
         }
     }
 
