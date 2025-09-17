@@ -33,27 +33,27 @@ class AlarmReceiver : BroadcastReceiver() {
 
         } else if (intent?.action == REPEATING_ALARM_ACTION) {
             intent.apply {
-
-                val workRequest = OneTimeWorkRequestBuilder<ScheduleNotificationWorker>()
-                    .setInputData(
-                        workDataOf(
-                            ScheduleNotificationWorker.ALARM_ID to getIntExtra(
-                                "alarmId",
-                                0
-                            ),
-                            ScheduleNotificationWorker.HOUR to getIntExtra("hour", 0),
-                            ScheduleNotificationWorker.MINUTE to getIntExtra("minute", 0)
+                getIntExtra("alarmId", 0).also { alarmId ->
+                    val workRequest = OneTimeWorkRequestBuilder<ScheduleNotificationWorker>()
+                        .setInputData(
+                            workDataOf(
+                                ScheduleNotificationWorker.ALARM_ID to alarmId,
+                                ScheduleNotificationWorker.HOUR to getIntExtra("hour", 0),
+                                ScheduleNotificationWorker.MINUTE to getIntExtra("minute", 0)
+                            )
                         )
+                        .addTag("AlarmTask")
+                        .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                        .setConstraints(
+                            Constraints.Builder().setRequiresCharging(false).build()
+                        )
+                        .build()
+                    WorkManager.getInstance(context).enqueueUniqueWork(
+                        "alarmId:$alarmId",
+                        ExistingWorkPolicy.REPLACE, workRequest
                     )
-                    .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                    .setConstraints(
-                        Constraints.Builder().setRequiresCharging(false).build()
-                    )
-                    .build()
-                WorkManager.getInstance(context).enqueueUniqueWork(
-                    "schedule notification",
-                    ExistingWorkPolicy.REPLACE, workRequest
-                )
+                }
+
             }
         }
     }

@@ -12,6 +12,7 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.work.WorkManager
 import com.lynaysereyvath.remindme.R
 import java.io.File
 import java.io.IOException
@@ -91,6 +92,7 @@ fun cancelRepeatingAlarm(context: Context, alarmId: Int, hour: Int, minute: Int)
     val pendingIntent = createRepeatingAlarmPendingIntent(context, alarmId, hour, minute)
     alarmManager.cancel(pendingIntent)
     pendingIntent.cancel()
+    WorkManager.getInstance(context).cancelUniqueWork("alarmId:$alarmId")
     Log.i("ExactAlarmScheduler", "Exact alarm (ID: $alarmId) canceled")
 }
 
